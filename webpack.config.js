@@ -5,11 +5,12 @@ const NODE_ENV = process.env.NODE_ENV || 'development',
       path = require('path'),
       ExtractTextPlugin = require("extract-text-webpack-plugin"),
       HtmlWebpackPlugin = require('html-webpack-plugin'),
-      rimraf = require('rimraf');
+      rimraf = require('rimraf'),
+      autoprefixer = require('autoprefixer');
 
-function addHash(template, hash) {
-  return NODE_ENV == 'production' ? template.replace(/\.[^.]+$/, `.[${hash}]$&`) : `${template}?hash=[${hash}]`;
-}
+// addHash = (template, hash) => {
+//   return NODE_ENV == 'production' ? template.replace(/\.[^.]+$/, `.[${hash}]$&`) : `${template}?hash=[${hash}]`;
+// }
 
 module.exports = {
     context: path.join(__dirname, '/src'),
@@ -24,7 +25,7 @@ module.exports = {
         filename:   '[name].[hash].js'
     },
     resolve: {
-        extensions: ['', '.js', '.less']
+        extensions: ['', '.js', '.jsx', '.less']
     },
     watch: true,
     watchOptions: {
@@ -34,8 +35,12 @@ module.exports = {
         loaders:[
             {
                 test: /\.js$/,
-                exclude: path.join(__dirname, '/node_modules/'),
-                loader: 'babel?presets[]=es2015'
+                include: path.join(__dirname, '/src'),
+                //exclude: path.join(__dirname, '/node_modules/'),
+                loader: 'babel', 
+                query: {
+                    presets:['es2015', 'react']
+                }
             },
             {
                 test: /\.less/,
@@ -52,6 +57,7 @@ module.exports = {
 
         ],
     },
+    postcss: ()=> [autoprefixer],
     plugins: [
         new ExtractTextPlugin('[name].[hash].css', {publicPath: path.join(__dirname, '/src/'),allChunks: true}),
         new webpack.optimize.CommonsChunkPlugin({
