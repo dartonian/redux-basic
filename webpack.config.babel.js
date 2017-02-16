@@ -1,12 +1,9 @@
-'use strict';
-
-const NODE_ENV = process.env.NODE_ENV || 'development',
-      webpack = require('webpack'),
-      path = require('path'),
-      ExtractTextPlugin = require("extract-text-webpack-plugin"),
-      HtmlWebpackPlugin = require('html-webpack-plugin'),
-      rimraf = require('rimraf'),
-      autoprefixer = require('autoprefixer');
+import webpack from 'webpack';
+import path from 'path';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import rimraf from 'rimraf';
+import autoprefixer from 'autoprefixer';
 
 // addHash = (template, hash) => {
 //   return NODE_ENV == 'production' ? template.replace(/\.[^.]+$/, `.[${hash}]$&`) : `${template}?hash=[${hash}]`;
