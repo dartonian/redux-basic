@@ -29,7 +29,7 @@ module.exports = {
     },
     watch: true,
     watchOptions: {
-        aggregateTimeout: 100
+        aggregateTimeout: 50
     },
     module: {
         loaders:[
@@ -37,10 +37,7 @@ module.exports = {
                 test: /\.js$/,
                 include: path.join(__dirname, '/src'),
                 //exclude: path.join(__dirname, '/node_modules/'),
-                loader: 'babel', 
-                query: {
-                    presets:['es2015', 'react']
-                }
+                loaders: ['babel']
             },
             {
                 test: /\.less/,
