@@ -9,7 +9,7 @@ import autoprefixer from 'autoprefixer';
 //   return NODE_ENV == 'production' ? template.replace(/\.[^.]+$/, `.[${hash}]$&`) : `${template}?hash=[${hash}]`;
 // }
 
-module.exports = {
+export default {
     context: path.join(__dirname, '/src'),
 
     entry: {
