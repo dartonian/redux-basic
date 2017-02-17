@@ -1,13 +1,24 @@
 import webpack from 'webpack';
 import path from 'path';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+//import HtmlWebpackPlugin from 'html-webpack-plugin';
 import rimraf from 'rimraf';
 import autoprefixer from 'autoprefixer';
 
-// addHash = (template, hash) => {
-//   return NODE_ENV == 'production' ? template.replace(/\.[^.]+$/, `.[${hash}]$&`) : `${template}?hash=[${hash}]`;
-// }
+const loaders = [
+    {
+        loader: 'css-loader',
+        options: {
+          modules: true
+        }
+    },
+    {
+        loader: 'postcss-loader'
+    },
+    {
+        loader: 'less-loader'
+    }
+];
 
 export default {
     context: path.join(__dirname, '/src'),
@@ -22,50 +33,71 @@ export default {
         filename:   '[name].[hash].js'
     },
     resolve: {
-        extensions: ['', '.js', '.jsx', '.less']
+    	modules:[
+			path.join(__dirname, '/src'),
+			'node_modules'
+    	]
+        //extensions: ['', '.js', '.jsx', '.less']
     },
     watch: true,
     watchOptions: {
         aggregateTimeout: 50
     },
     module: {
-        loaders:[
+        rules:[
             {
                 test: /\.js$/,
-                include: path.join(__dirname, '/src'),
-                //exclude: path.join(__dirname, '/node_modules/'),
-                loaders: ['babel']
+                use:[{
+            		
+            		loader: 'babel-loader',
+        	       /*options: {
+        		        include: path.join(__dirname, '/src')
+        		   }*/
+                }]
+                
             },
+
             {
                 test: /\.less/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less', 'postcss', 'less?sourceMap')
+                use: ExtractTextPlugin.extract({
+                      fallback: 'style-loader',
+                      use: loaders
+                    })
             },
             {
                 test: /\.(png|jpg|svg|ttf|eot|otf|woff|woff2)$/,
-                loader: 'file?name=[path][name].[ext]'
+                use:[{
+					loader: 'file-loader'
+                }]
+                //loader: 'file?name=[path][name].[ext]'
             },
             {
                 test: /\.html$/,
-                loader: 'raw-loader'
+                use:[{
+					loader: 'raw-loader'
+                }]
             }
-
         ],
     },
-    postcss: ()=> [autoprefixer],
     plugins: [
-        new ExtractTextPlugin('[name].[hash].css', {publicPath: path.join(__dirname, '/src/'),allChunks: true}),
+        new ExtractTextPlugin({
+            filename: '[name].[hash].css',
+            publicPath: path.join(__dirname, '/src/'),
+            allChunks: true
+
+        }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'app'
         }),
-        new HtmlWebpackPlugin({
-            template: 'index.html',
-            chunks: ['app'],
-            inject: 'body',
-            minify: {
-            removeComments: true,
-            collapseWhitespace: true
-          }
-        })
+        // new HtmlWebpackPlugin({
+        //     template: 'index.html',
+        //     chunks: ['app'],
+        //     inject: 'body',
+        //     minify: {
+        //     removeComments: true,
+        //     collapseWhitespace: true
+        //   }
+        // })
     ],
 
     devServer: {
