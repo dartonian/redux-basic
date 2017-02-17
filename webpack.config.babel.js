@@ -1,7 +1,7 @@
 import webpack from 'webpack';
 import path from 'path';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-//import HtmlWebpackPlugin from 'html-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 import rimraf from 'rimraf';
 import autoprefixer from 'autoprefixer';
 
@@ -49,10 +49,7 @@ export default {
                 test: /\.js$/,
                 use:[{
             		
-            		loader: 'babel-loader',
-        	       /*options: {
-        		        include: path.join(__dirname, '/src')
-        		   }*/
+            		loader: 'babel-loader'
                 }]
                 
             },
@@ -67,9 +64,11 @@ export default {
             {
                 test: /\.(png|jpg|svg|ttf|eot|otf|woff|woff2)$/,
                 use:[{
-					loader: 'file-loader'
+					loader: 'file-loader',
+                    options: {
+                        name: '[path][name].[ext]'
+                    }
                 }]
-                //loader: 'file?name=[path][name].[ext]'
             },
             {
                 test: /\.html$/,
@@ -89,15 +88,15 @@ export default {
         new webpack.optimize.CommonsChunkPlugin({
             name: 'app'
         }),
-        // new HtmlWebpackPlugin({
-        //     template: 'index.html',
-        //     chunks: ['app'],
-        //     inject: 'body',
-        //     minify: {
-        //     removeComments: true,
-        //     collapseWhitespace: true
-        //   }
-        // })
+        new HtmlWebpackPlugin({
+            template: 'index.html',
+            chunks: ['app'],
+            inject: 'body',
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true
+            }
+        })
     ],
 
     devServer: {
